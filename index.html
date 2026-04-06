@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockPro | Sistema administrativo profesional para negocios reales</title>
+  <meta name="description" content="StockPro es un sistema administrativo de control interno para inventario, ventas, ventas a crédito, reportes PDF, respaldo y licenciamiento profesional en Windows.">
+  <link rel="preload" as="image" href="assets/logo-stockpro.png">
+  <style>
+    :root {
+      --bg: #07111d;
+      --bg-2: #0a1627;
+      --panel: rgba(10, 22, 38, 0.84);
+      --panel-strong: rgba(9, 19, 34, 0.94);
+      --line: rgba(170, 198, 230, 0.12);
+      --line-strong: rgba(170, 198, 230, 0.22);
+      --text: #eff6ff;
+      --muted: #a7bbd6;
+      --cyan: #66d9ff;
+      --green: #8ef18d;
+      --green-strong: #4cdf7b;
+      --shadow: 0 24px 64px rgba(0,0,0,.34);
+      --radius: 26px;
+      --radius-sm: 18px;
+      --max: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(102, 217, 255, 0.14), transparent 24%),
+        radial-gradient(circle at top right, rgba(78, 223, 123, 0.12), transparent 18%),
+        linear-gradient(180deg, #050d17 0%, #08111d 18%, #091728 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 88%);
+      opacity: .12;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(calc(100% - 32px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(4, 10, 18, 0.72);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .topbar-inner {
+      min-height: 76px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-badge {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(102,217,255,.16), rgba(78,223,123,.14));
+      border: 1px solid rgba(255,255,255,.08);
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .brand-badge img {
+      width: 78%;
+      object-fit: contain;
+    }
+
+    .brand-text strong {
+      display: block;
+      font-size: 18px;
+      letter-spacing: .02em;
+    }
+
+    .brand-text span {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      font-size: 14px;
+      color: var(--muted);
+      transition: .2s ease;
+    }
+
+    .nav a:hover { color: var(--text); }
+
+    .nav .cta {
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #052013;
+      background: linear-gradient(135deg, #7ef5a0, #c9ff8d);
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(78,223,123,.22);
+    }
+
+    .hero {
+      padding: 62px 0 34px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items: stretch;
+    }
+
+    .hero-panel, .glass, .stat, .feature-card, .plan-card, .info-card, .gallery-card, .faq-card, .cta-banner {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-panel {
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel::after {
+      content: "";
+      position: absolute;
+      right: -100px;
+      top: -90px;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(102,217,255,.2), transparent 68%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      margin-bottom: 18px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      box-shadow: 0 0 0 6px rgba(102,217,255,.10);
+    }
+
+    .hero-logo {
+      width: min(100%, 560px);
+      margin-bottom: 16px;
+      filter: drop-shadow(0 10px 30px rgba(0,0,0,.28));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 5vw, 60px);
+      line-height: 1.03;
+      letter-spacing: -.04em;
+      max-width: 12ch;
+    }
+
+    .hero-lead {
+      margin: 18px 0 0;
+      color: #d2deee;
+      line-height: 1.78;
+      font-size: 18px;
+      max-width: 60ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 15px 20px;
+      border-radius: 15px;
+      font-weight: 800;
+      border: 1px solid transparent;
+      transition: .2s ease;
+      cursor: pointer;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8ef18d, #e7ffa0);
+      color: #0a2113;
+      box-shadow: 0 16px 32px rgba(78,223,123,.22);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.08);
+      color: var(--text);
+    }
+
+    .hero-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .hero-list .item {
+      padding: 14px 14px 14px 44px;
+      position: relative;
+      border-radius: 16px;
+      background: rgba(255,255,255,.035);
+      border: 1px solid rgba(255,255,255,.05);
+      color: #d5e4f4;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .hero-list .item::before {
+      content: "✓";
+      position: absolute;
+      left: 16px;
+      top: 13px;
+      width: 18px;
+      height: 18px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #0f2b17;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 18px;
+    }
+
+    .hero-shot {
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(13, 29, 49, 0.96), rgba(8, 17, 30, 0.98));
+    }
+
+    .hero-shot img {
+      width: 100%;
+      border-radius: 20px;
+      border: 1px solid var(--line-strong);
+    }
+
+    .hero-side .glass {
+      padding: 22px;
+      background: var(--panel-strong);
+    }
+
+    .glass h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .glass p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .stats {
+      padding: 12px 0 24px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .stat {
+      padding: 22px;
+      background: rgba(255,255,255,.035);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 26px;
+      letter-spacing: -.03em;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    section {
+      padding: 28px 0;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -.03em;
+    }
+
+    .section-kicker {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--green);
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 52ch;
+      font-size: 16px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .feature-card {
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(10,22,38,.9), rgba(8,17,30,.96));
+    }
+
+    .feature-card img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .feature-body {
+      padding: 20px 22px 24px;
+    }
+
+    .feature-body h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+    }
+
+    .feature-body p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.72;
+      font-size: 15px;
+    }
+
+    .benefits {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .info-stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .info-card {
+      padding: 24px;
+      background: var(--panel-strong);
+    }
+
+    .info-card h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .info-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .check-list {
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .check-list li {
+      position: relative;
+      padding-left: 34px;
+      color: #d6e2f3;
+      line-height: 1.7;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: #082114;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+    }
+
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .plan-card {
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-card.featured {
+      border-color: rgba(142,241,141,.32);
+      background: linear-gradient(180deg, rgba(17, 34, 56, .95), rgba(9, 19, 34, .98));
+      transform: translateY(-3px);
+    }
+
+    .plan-badge {
+      display: inline-flex;
+      padding: 8px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .plan-card.featured .plan-badge {
+      background: rgba(142,241,141,.14);
+      color: #d9ffd8;
+    }
+
+    .plan-card h3 {
+      margin: 0 0 12px;
+      font-size: 24px;
+    }
+
+    .price {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .price strong {
+      font-size: 42px;
+      line-height: 1;
+      letter-spacing: -.05em;
+    }
+
+    .price span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .plan-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .plan-card ul {
+      margin: 16px 0 0;
+      padding-left: 18px;
+      color: #d6e2f3;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .gallery-wrap {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .gallery-card {
+      padding: 0;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      appearance: none;
+      text-align: left;
+      width: 100%;
+      background: linear-gradient(180deg, rgba(10,22,38,.94), rgba(8,17,30,.98));
+    }
+
+    .gallery-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
+    .gallery-overlay {
+      display: block;
+      padding: 16px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      background: rgba(8,17,30,.92);
+    }
+
+    .gallery-overlay strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .gallery-overlay small {
+      display: block;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .cta-banner {
+      padding: 28px 30px;
+      background: linear-gradient(135deg, rgba(13, 33, 26, .92), rgba(8, 17, 30, .98));
+      border-color: rgba(142,241,141,.24);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      flex-wrap: wrap;
+    }
+
+    .cta-banner h3 {
+      margin: 0;
+      font-size: clamp(28px, 3vw, 42px);
+      line-height: 1.08;
+    }
+
+    .cta-banner p {
+      margin: 10px 0 0;
+      color: #d5e4f4;
+      line-height: 1.75;
+      max-width: 54ch;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .faq-card {
+      padding: 22px;
+      background: var(--panel-strong);
+    }
+
+    .faq-card h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .faq-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .footer {
+      padding: 30px 0 54px;
+    }
+
+    .footer-box {
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: rgba(7, 16, 28, .94);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-box p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .footer-mini {
+      margin-top: 14px;
+      text-align: center;
+      color: #7f95b4;
+      font-size: 13px;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 12, .84);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 120;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox-inner {
+      width: min(1120px, 100%);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(7, 16, 28, .98);
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    }
+
+    .lightbox-media {
+      background: #06111d;
+    }
+
+    .lightbox-media img {
+      width: 100%;
+      max-height: 72vh;
+      object-fit: contain;
+      background: #06111d;
+    }
+
+    .lightbox-content {
+      padding: 20px 22px 24px;
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .lightbox-content h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+    }
+
+    .lightbox-content p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .lightbox-close {
+      flex: 0 0 auto;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1120px) {
+      .stats-grid, .plans, .gallery-wrap {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hero-grid, .benefits, .support-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .topbar-inner, .section-head, .cta-banner, .footer-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav {
+        width: 100%;
+        justify-content: flex-start;
+      }
+      .feature-grid, .stats-grid, .plans, .gallery-wrap, .faq-grid, .hero-list {
+        grid-template-columns: 1fr;
+      }
+      .hero-panel, .glass, .plan-card, .info-card, .faq-card, .cta-banner {
+        padding: 22px;
+      }
+      .hero {
+        padding-top: 38px;
+      }
+      h1 { max-width: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a href="#inicio" class="brand">
+        <div class="brand-badge"><img src="assets/logo-stockpro.png" alt="Logo StockPro"></div>
+        <div class="brand-text">
+          <strong>StockPro</strong>
+          <span>Tu software de confianza</span>
+        </div>
+      </a>
+
+      <nav class="nav">
+        <a href="#funciones">Funciones</a>
+        <a href="#capturas">Capturas</a>
+        <a href="#planes">Planes</a>
+        <a href="#soporte">Soporte</a>
+        <a class="cta" href="https://wa.me/584245646367?text=Hola%2C%20quiero%20recibir%20informaci%C3%B3n%20de%20StockPro%2C%20activar%20mi%20prueba%20gratis%20y%20obtener%20el%20link%20de%20descarga." target="_blank" rel="noopener noreferrer">Prueba gratis</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div class="hero-panel">
+          <div class="eyebrow">Sistema administrativo de control interno para negocios reales</div>
+          <img src="assets/logo-stockpro.png" alt="StockPro" class="hero-logo">
+          <h1>Orden, control y presencia profesional para tu negocio.</h1>
+          <p class="hero-lead">
+            StockPro está pensado para repuesteras, tiendas y comercios que necesitan manejar inventario, ventas, ventas a crédito,
+            compras, proveedores, reportes PDF, respaldos y licenciamiento en una plataforma seria, compacta y lista para trabajar.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/ingmecarodriguez-afk/stockpro-downloads/releases/download/v1.0.1/StockProX_Setup.exe" target="_blank" rel="noopener noreferrer">Descarga directa</a>
+            <a class="btn btn-secondary" href="https://wa.me/584245646367?text=Hola%2C%20quiero%20recibir%20informaci%C3%B3n%20de%20StockPro%2C%20activar%20mi%20prueba%20gratis%20y%20obtener%20el%20link%20de%20descarga." target="_blank" rel="noopener noreferrer">Solicitar prueba gratis</a>
+            <a class="btn btn-secondary" href="assets/manual-stockpro.pdf" target="_blank" rel="noopener noreferrer">Ver manual operativo</a>
+            <a class="btn btn-secondary" href="#capturas">Ver capturas reales</a>
+          </div>
+
+          <div class="hero-list">
+            <div class="item">Inventario, ventas y crédito en una sola solución administrativa.</div>
+            <div class="item">Reportes PDF profesionales para operación y control interno.</div>
+            <div class="item">Respaldo local y en servidor para mayor seguridad de datos.</div>
+            <div class="item">Licenciamiento por dispositivos con control y soporte.</div>
+          </div>
+        </div>
+
+        <div class="hero-side">
+          <div class="hero-shot">
+            <img src="assets/extras/mockup-hero.webp" alt="Presentación de StockPro en entorno profesional">
+          </div>
+
+          <div class="glass">
+            <h3>Hecho para verse serio y trabajar mejor</h3>
+            <p>
+              La filosofía de StockPro es clara: menos adornos innecesarios, más utilidad real. Su diseño busca transmitir
+              profesionalismo, estabilidad y control operativo desde la primera impresión.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="container stats-grid">
+        <article class="stat">
+          <strong>Inventario</strong>
+          <span>Productos, existencias, edición de precios y consulta rápida en una sola vista.</span>
+        </article>
+        <article class="stat">
+          <strong>Ventas</strong>
+          <span>Ventas normales, cotizaciones, historial documental y control de movimientos.</span>
+        </article>
+        <article class="stat">
+          <strong>Crédito</strong>
+          <span>Seguimiento de clientes, deudores, abonos y vencimientos con estructura clara.</span>
+        </article>
+        <article class="stat">
+          <strong>Seguridad</strong>
+          <span>Respaldo local y en servidor, licencias por dispositivo y soporte administrativo.</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="funciones">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">Funciones principales</span>
+            <h2>Lo que StockPro pone bajo control</h2>
+          </div>
+          <p class="section-lead">
+            Cada ventana mostrada aquí corresponde a capturas reales del sistema. El objetivo es que el negocio opere con orden,
+            velocidad y mejor seguimiento administrativo.
+          </p>
+        </div>
+
+          <div class="feature-grid">
+            <article class="feature-card">
+              <img src="assets/screens/dashboard.webp" alt="Dashboard informativo">
+              <div class="feature-body">
+                <h3>Dashboard informativo</h3>
+                <p>Una vista central para monitorear tu operación, actualizar tasas y revisar el pulso del negocio sin perder tiempo.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img src="assets/screens/inventario.webp" alt="Inventario con control real">
+              <div class="feature-body">
+                <h3>Inventario con control real</h3>
+                <p>Administra existencias, precios manuales, referencias en distintas monedas y edición de productos en una sola ventana.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img src="assets/screens/ventas.webp" alt="Ventas y documento de venta">
+              <div class="feature-body">
+                <h3>Ventas y documento de venta</h3>
+                <p>Genera ventas reales con control operativo, tasas establecidas y flujo pensado para atención rápida.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img src="assets/screens/ventas-credito.webp" alt="Ventas a crédito y deudores">
+              <div class="feature-body">
+                <h3>Ventas a crédito y deudores</h3>
+                <p>Registra ventas fiadas, controla clientes, saldos, abonos y retrasos con mayor claridad administrativa.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img src="assets/screens/proveedores.webp" alt="Compras, proveedores y facturas">
+              <div class="feature-body">
+                <h3>Compras, proveedores y facturas</h3>
+                <p>Registra compras, asocia proveedores, adjunta imágenes de facturas y controla deudas del negocio.</p>
+              </div>
+            </article>
+            <article class="feature-card">
+              <img src="assets/screens/reportes-pdf.webp" alt="Reportes PDF y respaldos">
+              <div class="feature-body">
+                <h3>Reportes PDF y respaldos</h3>
+                <p>Emite reportes profesionales y protege la información con respaldo local y en servidor.</p>
+              </div>
+            </article>
+          </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="container benefits">
+        <article class="info-card">
+          <span class="section-kicker">Quiénes somos</span>
+          <h3>Software útil para negocios que sí necesitan control.</h3>
+          <p>
+            StockPro nace con una visión clara: crear una herramienta seria, moderna y vendible para pequeños y medianos negocios
+            que no quieren depender del desorden, de hojas sueltas o de soluciones improvisadas.
+          </p>
+          <ul class="check-list">
+            <li>Enfoque real en operación administrativa diaria.</li>
+            <li>Interfaz profesional y compacta para escritorio Windows.</li>
+            <li>Módulos pensados para negocios con movimiento real.</li>
+            <li>Soporte directo para instalación, prueba y licenciamiento.</li>
+          </ul>
+        </article>
+
+        <div class="info-stack">
+          <article class="info-card">
+            <span class="section-kicker">Objetivo</span>
+            <h3>Ayudarte a trabajar con más claridad y confianza.</h3>
+            <p>
+              La meta de StockPro es ayudarte a registrar mejor tus operaciones, cuidar tu información, organizar tu inventario
+              y tomar decisiones con datos más visibles.
+            </p>
+          </article>
+
+          <article class="info-card">
+            <span class="section-kicker">Importante</span>
+            <h3>No es un sistema fiscal.</h3>
+            <p>
+              StockPro es un sistema administrativo de control interno. Está diseñado para apoyar el manejo operativo del negocio,
+              el orden de la información y la productividad diaria.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="planes">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">Planes por dispositivos</span>
+            <h2>La licencia se ajusta al tamaño de tu operación</h2>
+          </div>
+          <p class="section-lead">
+            Cada licencia puede configurarse según la cantidad máxima de equipos autorizados. Si cambias de PC o necesitas ampliar,
+            el soporte puede ayudarte a liberar o ajustar cupos.
+          </p>
+        </div>
+
+        <div class="plans">
+          <article class="plan-card">
+            <div class="plan-badge">Plan base</div>
+            <h3>2 dispositivos</h3>
+            <div class="price"><strong>10$</strong><span>licencia configurada</span></div>
+            <p>Una opción sólida para negocio principal y un equipo adicional de trabajo.</p>
+            <ul>
+              <li>Hasta 2 equipos autorizados</li>
+              <li>Control de acceso por dispositivo</li>
+              <li>Soporte para cambio de equipo</li>
+            </ul>
+          </article>
+
+          <article class="plan-card featured">
+            <div class="plan-badge">Plan recomendado</div>
+            <h3>3 dispositivos</h3>
+            <div class="price"><strong>15$</strong><span>licencia configurada</span></div>
+            <p>Más margen operativo para negocios con mayor movimiento o crecimiento.</p>
+            <ul>
+              <li>Hasta 3 equipos autorizados</li>
+              <li>Mejor flexibilidad operativa</li>
+              <li>Buena relación capacidad / costo</li>
+            </ul>
+          </article>
+
+          <article class="plan-card">
+            <div class="plan-badge">Plan expandido</div>
+            <h3>4 dispositivos</h3>
+            <div class="price"><strong>18$</strong><span>licencia configurada</span></div>
+            <p>Ideal para equipos de trabajo más amplios o estaciones adicionales.</p>
+            <ul>
+              <li>Hasta 4 equipos autorizados</li>
+              <li>Más amplitud para organización interna</li>
+              <li>Escala con tu operación</li>
+            </ul>
+          </article>
+
+          <article class="plan-card">
+            <div class="plan-badge">Plan máximo actual</div>
+            <h3>5 dispositivos</h3>
+            <div class="price"><strong>20$</strong><span>licencia configurada</span></div>
+            <p>La opción más amplia disponible actualmente dentro del esquema aprobado.</p>
+            <ul>
+              <li>Hasta 5 equipos autorizados</li>
+              <li>Mayor margen para expansión</li>
+              <li>Control centralizado de licencias</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="capturas">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">Capturas reales</span>
+            <h2>Recorre el sistema antes de probarlo</h2>
+          </div>
+          <p class="section-lead">
+            Aquí puedes ver ventanas reales del producto: inventario, ventas, crédito, configuración, reportes, licencias, respaldo,
+            compras, proveedores, cotizaciones y más.
+          </p>
+        </div>
+
+        <div class="gallery-wrap">
+          <button class="gallery-card" data-full="assets/screens/registro-inicial.webp" data-title="Registro inicial" data-desc="Pantalla para comenzar el proceso de prueba o licencia del sistema.">
+            <img src="assets/screens/registro-inicial-thumb.webp" alt="Registro inicial">
+            <span class="gallery-overlay">
+              <strong>Registro inicial</strong>
+              <small>Pantalla para comenzar el proceso de prueba o licencia del sistema.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/validacion-licencia.webp" data-title="Validación de licencia" data-desc="Consulta del estado de la licencia y acceso seguro al sistema.">
+            <img src="assets/screens/validacion-licencia-thumb.webp" alt="Validación de licencia">
+            <span class="gallery-overlay">
+              <strong>Validación de licencia</strong>
+              <small>Consulta del estado de la licencia y acceso seguro al sistema.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/dashboard.webp" data-title="Dashboard informativo" data-desc="Vista principal con resumen operativo, tasa del día y seguimiento general del negocio.">
+            <img src="assets/screens/dashboard-thumb.webp" alt="Dashboard informativo">
+            <span class="gallery-overlay">
+              <strong>Dashboard informativo</strong>
+              <small>Vista principal con resumen operativo, tasa del día y seguimiento general del negocio.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/inventario.webp" data-title="Inventario profesional" data-desc="Control de productos, existencias y manejo de precios en distintas referencias.">
+            <img src="assets/screens/inventario-thumb.webp" alt="Inventario profesional">
+            <span class="gallery-overlay">
+              <strong>Inventario profesional</strong>
+              <small>Control de productos, existencias y manejo de precios en distintas referencias.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/ventas.webp" data-title="Ventas rápidas" data-desc="Generación de documentos de venta con control operativo real.">
+            <img src="assets/screens/ventas-thumb.webp" alt="Ventas rápidas">
+            <span class="gallery-overlay">
+              <strong>Ventas rápidas</strong>
+              <small>Generación de documentos de venta con control operativo real.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/ventas-credito.webp" data-title="Ventas a crédito" data-desc="Registro de ventas fiadas, clientes, saldos y datos asociados a cada operación.">
+            <img src="assets/screens/ventas-credito-thumb.webp" alt="Ventas a crédito">
+            <span class="gallery-overlay">
+              <strong>Ventas a crédito</strong>
+              <small>Registro de ventas fiadas, clientes, saldos y datos asociados a cada operación.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/deudores.webp" data-title="Control de deudores" data-desc="Seguimiento de saldos pendientes, retrasos, abonos e historial de cobro.">
+            <img src="assets/screens/deudores-thumb.webp" alt="Control de deudores">
+            <span class="gallery-overlay">
+              <strong>Control de deudores</strong>
+              <small>Seguimiento de saldos pendientes, retrasos, abonos e historial de cobro.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/compras.webp" data-title="Compras" data-desc="Ingreso de nuevas compras para sumar existencias al inventario general.">
+            <img src="assets/screens/compras-thumb.webp" alt="Compras">
+            <span class="gallery-overlay">
+              <strong>Compras</strong>
+              <small>Ingreso de nuevas compras para sumar existencias al inventario general.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/proveedores.webp" data-title="Proveedores y facturas" data-desc="Gestión de proveedores, facturas, montos editables y control de deuda del negocio.">
+            <img src="assets/screens/proveedores-thumb.webp" alt="Proveedores y facturas">
+            <span class="gallery-overlay">
+              <strong>Proveedores y facturas</strong>
+              <small>Gestión de proveedores, facturas, montos editables y control de deuda del negocio.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/centro-reportes.webp" data-title="Centro de reportes" data-desc="Acceso centralizado a reportes administrativos del sistema.">
+            <img src="assets/screens/centro-reportes-thumb.webp" alt="Centro de reportes">
+            <span class="gallery-overlay">
+              <strong>Centro de reportes</strong>
+              <small>Acceso centralizado a reportes administrativos del sistema.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/reportes-pdf.webp" data-title="Impresión de reportes PDF" data-desc="Ejemplos reales de salidas PDF profesionales para consulta o impresión.">
+            <img src="assets/screens/reportes-pdf-thumb.webp" alt="Impresión de reportes PDF">
+            <span class="gallery-overlay">
+              <strong>Impresión de reportes PDF</strong>
+              <small>Ejemplos reales de salidas PDF profesionales para consulta o impresión.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/reporte-inventario.webp" data-title="Reporte de inventario y patrimonio" data-desc="Salida en PDF del inventario general y patrimonio de los ítems del negocio.">
+            <img src="assets/screens/reporte-inventario-thumb.webp" alt="Reporte de inventario y patrimonio">
+            <span class="gallery-overlay">
+              <strong>Reporte de inventario y patrimonio</strong>
+              <small>Salida en PDF del inventario general y patrimonio de los ítems del negocio.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/historial.webp" data-title="Historial de movimientos" data-desc="Consulta histórica de documentos, ventas y movimientos del sistema.">
+            <img src="assets/screens/historial-thumb.webp" alt="Historial de movimientos">
+            <span class="gallery-overlay">
+              <strong>Historial de movimientos</strong>
+              <small>Consulta histórica de documentos, ventas y movimientos del sistema.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/cotizaciones.webp" data-title="Cotizaciones" data-desc="Preparación de cotizaciones guardables antes de cerrar la venta definitiva.">
+            <img src="assets/screens/cotizaciones-thumb.webp" alt="Cotizaciones">
+            <span class="gallery-overlay">
+              <strong>Cotizaciones</strong>
+              <small>Preparación de cotizaciones guardables antes de cerrar la venta definitiva.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/herramientas.webp" data-title="Herramientas del sistema" data-desc="Conversor de monedas, calculadoras y utilidades auxiliares para el trabajo diario.">
+            <img src="assets/screens/herramientas-thumb.webp" alt="Herramientas del sistema">
+            <span class="gallery-overlay">
+              <strong>Herramientas del sistema</strong>
+              <small>Conversor de monedas, calculadoras y utilidades auxiliares para el trabajo diario.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/configuracion-general.webp" data-title="Configuración general" data-desc="Ajustes de precios por porcentaje, apariencia y parámetros del negocio.">
+            <img src="assets/screens/configuracion-general-thumb.webp" alt="Configuración general">
+            <span class="gallery-overlay">
+              <strong>Configuración general</strong>
+              <small>Ajustes de precios por porcentaje, apariencia y parámetros del negocio.</small>
+            </span>
+          </button>
+          <button class="gallery-card" data-full="assets/screens/respaldo.webp" data-title="Respaldo y restauración" data-desc="Protección de datos con respaldo local y en servidor para mayor seguridad.">
+            <img src="assets/screens/respaldo-thumb.webp" alt="Respaldo y restauración">
+            <span class="gallery-overlay">
+              <strong>Respaldo y restauración</strong>
+              <small>Protección de datos con respaldo local y en servidor para mayor seguridad.</small>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container cta-banner">
+        <div>
+          <h3>Prueba StockPro y siente una solución hecha en serio.</h3>
+          <p>
+            Escríbenos por WhatsApp para activar tu prueba gratis, recibir orientación, conocer el plan adecuado para tu negocio y
+            obtener tu link de descarga.
+          </p>
+        </div>
+        <div class="hero-actions" style="margin-top:0;">
+          <a class="btn btn-primary" href="https://github.com/ingmecarodriguez-afk/stockpro-downloads/releases/download/v1.0.1/StockProX_Setup.exe" target="_blank" rel="noopener noreferrer">Descarga directa</a>
+          <a class="btn btn-secondary" href="https://wa.me/584245646367?text=Hola%2C%20quiero%20recibir%20informaci%C3%B3n%20de%20StockPro%2C%20activar%20mi%20prueba%20gratis%20y%20obtener%20el%20link%20de%20descarga." target="_blank" rel="noopener noreferrer">Hablar por WhatsApp</a>
+          <a class="btn btn-secondary" href="assets/manual-stockpro.pdf" target="_blank" rel="noopener noreferrer">Ver manual</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="soporte">
+      <div class="container support-grid">
+        <article class="info-card">
+          <span class="section-kicker">Soporte y contacto</span>
+          <h3>Atención directa para prueba, instalación y licenciamiento</h3>
+          <p>
+            Si quieres conocer StockPro, recibir tu link de descarga o activar la prueba gratis, contáctanos directamente. También
+            puedes escribir si necesitas ampliar dispositivos o soporte para cambio de equipo.
+          </p>
+          <ul class="check-list">
+            <li>WhatsApp Venezuela: +58 424 564 6367</li>
+            <li>Activación y validación de licencia</li>
+            <li>Prueba gratis y orientación inicial</li>
+            <li>Liberación o ajuste de equipos autorizados</li>
+          </ul>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://wa.me/584245646367?text=Hola%2C%20quiero%20recibir%20informaci%C3%B3n%20de%20StockPro%2C%20activar%20mi%20prueba%20gratis%20y%20obtener%20el%20link%20de%20descarga." target="_blank" rel="noopener noreferrer">Solicitar información</a>
+            <a class="btn btn-secondary" href="https://github.com/ingmecarodriguez-afk/stockpro-downloads/releases/download/v1.0.1/StockProX_Setup.exe" target="_blank" rel="noopener noreferrer">Ir a descarga directa</a>
+          </div>
+        </article>
+
+        <article class="info-card">
+          <span class="section-kicker">Requisitos</span>
+          <h3>Compatibilidad del sistema</h3>
+          <ul class="check-list">
+            <li>Windows 10 o superior</li>
+            <li>Solo compatible con 64 bits (x64)</li>
+            <li>No compatible con 32 bits (x86)</li>
+            <li>Conexión a internet cuando aplique para prueba o activación</li>
+          </ul>
+          <p style="margin-top:18px;">
+            El acceso web auxiliar puede complementar la operación, pero el sistema principal de StockPro está orientado al entorno
+            de escritorio Windows.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="section-kicker">Preguntas frecuentes</span>
+            <h2>Lo importante antes de contratar o probar</h2>
+          </div>
+          <p class="section-lead">Respuestas rápidas para que el cliente entienda qué ofrece StockPro y cómo funciona.</p>
+        </div>
+
+        <div class="faq-grid">
+          <article class="faq-card">
+            <h3>¿StockPro sirve para negocios reales?</h3>
+            <p>Sí. Está orientado a repuesteras, tiendas y comercios que necesitan control de inventario, ventas, crédito y reportes.</p>
+          </article>
+
+          <article class="faq-card">
+            <h3>¿Qué pasa si cambio de computadora?</h3>
+            <p>Debes contactar soporte para liberar un equipo anterior o ajustar el cupo de dispositivos según tu licencia.</p>
+          </article>
+
+          <article class="faq-card">
+            <h3>¿Puedo usarlo en 32 bits?</h3>
+            <p>No. La compatibilidad prevista para el cliente de escritorio es Windows de 64 bits (x64).</p>
+          </article>
+
+          <article class="faq-card">
+            <h3>¿La prueba gratis requiere contacto?</h3>
+            <p>Sí. La activación de prueba y la orientación inicial se coordinan por WhatsApp para acompañar mejor al cliente.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-box">
+        <div>
+          <strong style="font-size: 20px;">StockPro</strong>
+          <p>Tu software de confianza para control interno, inventario, ventas, crédito, reportes y respaldo en negocios reales.</p>
+        </div>
+        <div class="hero-actions" style="margin-top:0;">
+          <a class="btn btn-primary" href="https://github.com/ingmecarodriguez-afk/stockpro-downloads/releases/download/v1.0.1/StockProX_Setup.exe" target="_blank" rel="noopener noreferrer">Descarga directa</a>
+          <a class="btn btn-secondary" href="https://wa.me/584245646367?text=Hola%2C%20quiero%20recibir%20informaci%C3%B3n%20de%20StockPro%2C%20activar%20mi%20prueba%20gratis%20y%20obtener%20el%20link%20de%20descarga." target="_blank" rel="noopener noreferrer">Solicitar prueba gratis</a>
+        </div>
+      </div>
+      <div class="footer-mini">© StockPro · Soluciones AI - PRO · Página oficial de presentación</div>
+    </div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-inner">
+      <div class="lightbox-media">
+        <img id="lightboxImage" src="" alt="">
+      </div>
+      <div class="lightbox-content">
+        <div>
+          <h3 id="lightboxTitle"></h3>
+          <p id="lightboxDesc"></p>
+        </div>
+        <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.gallery-card');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxDesc = document.getElementById('lightboxDesc');
+    const closeBtn = document.getElementById('lightboxClose');
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => {
+        lightboxImage.src = card.dataset.full;
+        lightboxImage.alt = card.dataset.title;
+        lightboxTitle.textContent = card.dataset.title;
+        lightboxDesc.textContent = card.dataset.desc;
+        lightbox.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        lightboxImage.src = '';
+      }, 200);
+    }
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+    });
+  </script>
+</body>
+</html>
